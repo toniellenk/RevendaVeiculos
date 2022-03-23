@@ -1,6 +1,6 @@
 namespace RevendaVeiculos.Web.Models
 {
-    public class ErrorViewModel
+    public class ErrorVM
     {
         public string? RequestId { get; set; }
 

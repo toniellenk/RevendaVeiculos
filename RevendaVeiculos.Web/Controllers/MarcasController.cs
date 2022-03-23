@@ -1,9 +1,12 @@
 ﻿#nullable disable
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RevendaVeiculos.Data;
+using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
 using RevendaVeiculos.Service.Services.Marcas;
+using RevendaVeiculos.Web.Models;
 
 namespace RevendaVeiculos.Web.Controllers
 {
@@ -11,20 +14,23 @@ namespace RevendaVeiculos.Web.Controllers
     {
         private readonly RevendaVeiculosContext _context;
         private readonly IMarcasService _marcasService;
+        private readonly IMapper _mapper;  
 
-        public MarcasController(RevendaVeiculosContext context, IMarcasService marcasService)
+
+        public MarcasController(RevendaVeiculosContext context, IMarcasService marcasService, IMapper mapper)
         {
             _context = context;
             _marcasService = marcasService;
+            _mapper = mapper;
         }
 
-        // GET: Marcas
         public async Task<IActionResult> Index()
         {
-            return View(await _marcasService.ListPagedAsync(c => c.Id, 1, 10));
+            var marcas = await _marcasService.ListPagedAsync(c => c.Id, 1, 10);
+            var marcasVM = _mapper.Map<PagedQuery<MarcaVM>>(marcas);
+            return View(marcasVM);
         }
 
-        // GET: Marcas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,31 +44,26 @@ namespace RevendaVeiculos.Web.Controllers
                 return NotFound();
             }
 
-            return View(marca);
+            return View(_mapper.Map<MarcaVM>(marca));
         }
 
-        // GET: Marcas/Create
         public IActionResult Create()
         {
-            return View(new Marca());
+            return View(new MarcaVM());
         }
 
-        // POST: Marcas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,StatusRegistro")] Marca marca)
+        public async Task<IActionResult> Create(MarcaVM marcaVM)
         {
             if (ModelState.IsValid)
             {
-                await _marcasService.AddAsync(marca);
+                await _marcasService.AddAsync(_mapper.Map<Marca>(marcaVM));
                 return RedirectToAction(nameof(Index));
             }
-            return View(marca);
+            return View(marcaVM);
         }
 
-        // GET: Marcas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,17 +76,14 @@ namespace RevendaVeiculos.Web.Controllers
             {
                 return NotFound();
             }
-            return View(marca);
+            return View(_mapper.Map<MarcaVM>(marca));
         }
 
-        // POST: Marcas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,StatusRegistro")] Marca marca)
+        public async Task<IActionResult> Edit(int id, MarcaVM marcaVM)
         {
-            if (id != marca.Id)
+            if (id != marcaVM.Id)
             {
                 return NotFound();
             }
@@ -94,11 +92,11 @@ namespace RevendaVeiculos.Web.Controllers
             {
                 try
                 {
-                    await _marcasService.UpdateAsync(marca);
+                    await _marcasService.UpdateAsync(_mapper.Map<Marca>(marcaVM));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MarcaExists(marca.Id))
+                    if (!await _marcasService.ExistsByIdAsync(marcaVM.Id))
                     {
                         return NotFound();
                     }
@@ -109,41 +107,7 @@ namespace RevendaVeiculos.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(marca);
-        }
-
-        // GET: Marcas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var marca = await _context.Marca
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (marca == null)
-            {
-                return NotFound();
-            }
-
-            return View(marca);
-        }
-
-        // POST: Marcas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var marca = await _context.Marca.FindAsync(id);
-            _context.Marca.Remove(marca);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool MarcaExists(int id)
-        {
-            return _context.Marca.Any(e => e.Id == id);
+            return View(marcaVM);
         }
     }
 }

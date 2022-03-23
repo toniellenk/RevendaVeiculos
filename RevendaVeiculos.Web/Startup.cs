@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RevendaVeiculos.Data;
 using RevendaVeiculos.Service.Services.Marcas;
 using RevendaVeiculos.Service.Services.Proprietarios;
+using RevendaVeiculos.Web.Maps;
 
 namespace RevendaVeiculos.Web
 {

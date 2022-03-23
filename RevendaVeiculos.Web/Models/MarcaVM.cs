@@ -6,6 +6,6 @@ namespace RevendaVeiculos.Web.Models
     {
         public int Id { get; set; }
         public string? Nome { get; set; }
-        public StatusRegistroEnum StatusRegistro { get; set; }
+        public StatusRegistroEnum StatusRegistro { get; set; } = StatusRegistroEnum.Ativo;
     }
 }
