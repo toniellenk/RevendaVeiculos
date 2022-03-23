@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RevendaVeiculos.Data.BaseRepository
 {
-    public interface IBaseRepository<T> : IUnitOfWork where T : BaseEntity
+    public interface IBaseRepository<T> where T : BaseEntity
     {
         Task<T> GetByIdAsync(int? id);
         Task<bool> ExistsByIdAsync(int? id);

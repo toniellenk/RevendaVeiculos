@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 
 namespace RevendaVeiculos.Data.BaseRepository
 {
-    public class BaseRepository<T> : UnitOfWork, IBaseRepository<T> where T : BaseEntity
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
+        protected readonly RevendaVeiculosContext _context;
 
 
-        public BaseRepository(RevendaVeiculosContext context) : base(context)
+        public BaseRepository(RevendaVeiculosContext context)
         {
-
+            _context = context;
         }
 
         public async Task<T> GetByIdAsync(int? id)
