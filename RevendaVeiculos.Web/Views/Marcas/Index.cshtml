@@ -1,0 +1,42 @@
+﻿@using RevendaVeiculos.Data.BaseRepository
+@model PagedQuery<RevendaVeiculos.Data.Entities.Marca>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Cadastro de Marcas</h1>
+
+<p>
+    <a asp-action="Create">Nova Marca</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nome
+            </th>
+            <th>
+                Status
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Data) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusRegistro)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Visualizar</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

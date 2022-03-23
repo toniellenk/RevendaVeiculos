@@ -1,9 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using RevendaVeiculos.Data;
+using RevendaVeiculos.Service.Services.Marcas;
+using RevendaVeiculos.Service.Services.Proprietarios;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<RevendaVeiculosContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("RevendaVeiculosContext")));
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+}
+else
+{
+    builder.Services
+        .AddControllersWithViews();
+}
+
+builder.Services.AddScoped<IMarcasService, MarcasService>();
+builder.Services.AddScoped<IProprietariosService, ProprietariosService>();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
