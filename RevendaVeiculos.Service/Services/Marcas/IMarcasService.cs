@@ -10,5 +10,6 @@ namespace RevendaVeiculos.Service.Services.Marcas
 {
     public interface IMarcasService : IBaseRepository<Marca>
     {
+        Task<IEnumerable<Marca>> GetAllActiveListAsync();
     }
 }

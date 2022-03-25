@@ -19,8 +19,6 @@ namespace RevendaVeiculos.Data.Entities
         public int AnoModelo { get; set; }
         public int Quilometragem { get; set; }
         public decimal Valor { get; set; }
-
-        [Display(Name = "Status")]
         public StatusVeiculoEnum StatusVeiculo { get; set; } = StatusVeiculoEnum.Disponivel;
     }
 }

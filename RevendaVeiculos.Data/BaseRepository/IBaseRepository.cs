@@ -17,7 +17,7 @@ namespace RevendaVeiculos.Data.BaseRepository
         Task<T> FirstOrDefaultAsNoTrackingAsync(Expression<Func<T, bool>> expression, string include);
         Task<T> FirstOrDefaultAsNoTrackingAsync(Expression<Func<T, bool>> expression);
         Task<bool> Any(Expression<Func<T, bool>> expression);
-        Task<List<T>> ToListAsync(Expression<Func<T, bool>> expression);
+        Task<IEnumerable<T>> ToListAsync(Expression<Func<T, bool>> expression);
         Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> expression, string include);
         Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> expression);
         Task<PagedQuery<T>> ListPagedAsync<TKey>(Expression<Func<T, bool>> expression,

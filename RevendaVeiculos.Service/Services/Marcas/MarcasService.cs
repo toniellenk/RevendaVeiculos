@@ -1,6 +1,7 @@
 ﻿using RevendaVeiculos.Data;
 using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
+using RevendaVeiculos.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,8 @@ namespace RevendaVeiculos.Service.Services.Marcas
         public MarcasService(RevendaVeiculosContext context) : base(context)
         {
         }
+
+        public Task<IEnumerable<Marca>> GetAllActiveListAsync() =>
+                 ToListAsync(p => p.StatusRegistro == StatusRegistroEnum.Ativo);
     }
 }

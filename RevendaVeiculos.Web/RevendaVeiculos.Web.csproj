@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="LazZiya.ExpressLocalization" Version="4.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.2">
@@ -23,6 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\RevendaVeiculos.Data\RevendaVeiculos.Data.csproj" />
     <ProjectReference Include="..\RevendaVeiculos.Service\RevendaVeiculos.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LocalizationResources\" />
   </ItemGroup>
 
 </Project>

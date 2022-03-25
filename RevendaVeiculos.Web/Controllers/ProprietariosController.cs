@@ -1,9 +1,12 @@
 ﻿#nullable disable
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RevendaVeiculos.Data;
+using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
 using RevendaVeiculos.Service.Services.Proprietarios;
+using RevendaVeiculos.Web.Models;
 
 namespace RevendaVeiculos.Web.Controllers
 {
@@ -11,16 +14,21 @@ namespace RevendaVeiculos.Web.Controllers
     {
         private readonly RevendaVeiculosContext _context;
         private readonly IProprietariosService _proprietariosService;
+        private readonly IMapper _mapper;
 
-        public ProprietariosController(RevendaVeiculosContext context, IProprietariosService proprietariosService)
+
+        public ProprietariosController(RevendaVeiculosContext context, IProprietariosService proprietariosService, IMapper mapper)
         {
             _context = context;
             _proprietariosService = proprietariosService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _proprietariosService.ListPagedAsync(c => c.Id, 1, 10));
+            var proprietarios = await _proprietariosService.ListPagedAsync(c => c.Id, 1, 10);
+            var proprietariosVM = _mapper.Map<PagedQuery<ProprietarioVM>>(proprietarios);
+            return View(proprietariosVM);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -36,24 +44,24 @@ namespace RevendaVeiculos.Web.Controllers
                 return NotFound();
             }
 
-            return View(proprietario);
+            return View(_mapper.Map<ProprietarioVM>(proprietario));
         }
 
         public IActionResult Create()
         {
-            return View(new Proprietario());
+            return View(new ProprietarioVM());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Proprietario proprietario)
+        public async Task<IActionResult> Create(ProprietarioVM proprietarioVM)
         {
             if (ModelState.IsValid)
             {
-                await _proprietariosService.AddAsync(proprietario);
+                await _proprietariosService.AddAsync(_mapper.Map<Proprietario>(proprietarioVM));
                 return RedirectToAction(nameof(Index));
             }
-            return View(proprietario);
+            return View(proprietarioVM);
         }
 
        
@@ -69,14 +77,14 @@ namespace RevendaVeiculos.Web.Controllers
             {
                 return NotFound();
             }
-            return View(proprietario);
+            return View(_mapper.Map<ProprietarioVM>(proprietario));
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Proprietario proprietario)
+        public async Task<IActionResult> Edit(int id, ProprietarioVM proprietarioVM)
         {
-            if (id != proprietario.Id)
+            if (id != proprietarioVM.Id)
             {
                 return NotFound();
             }
@@ -85,11 +93,11 @@ namespace RevendaVeiculos.Web.Controllers
             {
                 try
                 {
-                    await _proprietariosService.UpdateAsync(proprietario);
+                    await _proprietariosService.UpdateAsync(_mapper.Map<Proprietario>(proprietarioVM));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _proprietariosService.ExistsByIdAsync(proprietario.Id))
+                    if (!await _proprietariosService.ExistsByIdAsync(proprietarioVM.Id))
                     {
                         return NotFound();
                     }
@@ -100,7 +108,7 @@ namespace RevendaVeiculos.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(proprietario);
+            return View(proprietarioVM);
         }
     }
 }

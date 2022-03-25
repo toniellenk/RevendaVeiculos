@@ -13,6 +13,12 @@ namespace RevendaVeiculos.Web.Maps
 
             CreateMap<Marca, MarcaVM>();
             CreateMap<MarcaVM, Marca>();
+
+            CreateMap<Proprietario, ProprietarioVM>();
+            CreateMap<ProprietarioVM, Proprietario>();
+
+            CreateMap<Veiculo, VeiculoVM>();
+            CreateMap<VeiculoVM, Veiculo>();
         }
     }  
 }

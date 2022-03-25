@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RevendaVeiculos.Service.Services.Marcas
+namespace RevendaVeiculos.Service.Services.Veiculos
 {
     public class VeiculosService : BaseRepository<Veiculo>, IVeiculosService
     {

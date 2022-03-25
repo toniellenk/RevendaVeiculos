@@ -90,7 +90,7 @@ namespace RevendaVeiculos.Data.BaseRepository
         public async Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> expression)
             => await Task.Run(() => _context.Set<T>().Where(expression));
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> expression)
+        public async Task<IEnumerable<T>> ToListAsync(Expression<Func<T, bool>> expression)
             => await _context.Set<T>().Where(expression).ToListAsync();
 
         public async Task<IQueryable<T>> Where(Expression<Func<T, bool>> expression)

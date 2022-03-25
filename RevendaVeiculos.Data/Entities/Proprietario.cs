@@ -11,13 +11,10 @@ namespace RevendaVeiculos.Data.Entities
         public string Nome { get; set; }
         public string Documento { get; set; }
 
-        [Display(Name = "E-mail")]
         public string Email { get; set; }
 
-        [Display(Name = "Endereço")]
         public string Endereco { get; set; }
 
-        [Display(Name = "Status")]
         public StatusRegistroEnum StatusRegistro { get; set; } = StatusRegistroEnum.Ativo;
     }
 }
