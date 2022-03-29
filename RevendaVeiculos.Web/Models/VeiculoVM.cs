@@ -44,6 +44,7 @@ namespace RevendaVeiculos.Web.Models
 
         [Required(ErrorMessage = "Informe um valor válido")]
         [RegularExpression(@"^\s*\d{1,6},\d{2}$", ErrorMessage = "Utilize o formato Ex: 0,00")]
+        [DataType(DataType.Currency)]
         public string? Valor { get; set; }
 
         [Display(Name = "Status")]

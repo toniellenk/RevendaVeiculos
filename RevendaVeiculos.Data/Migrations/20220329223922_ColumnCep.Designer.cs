@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RevendaVeiculos.Data;
 
@@ -11,9 +12,10 @@ using RevendaVeiculos.Data;
 namespace RevendaVeiculos.Data.Migrations
 {
     [DbContext(typeof(RevendaVeiculosContext))]
-    partial class RevendaVeiculosContextModelSnapshot : ModelSnapshot
+    [Migration("20220329223922_ColumnCep")]
+    partial class ColumnCep
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

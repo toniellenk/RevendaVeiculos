@@ -20,6 +20,11 @@ namespace RevendaVeiculos.Web.Models
         [ExRequired]
         public string Email { get; set; }
 
+        [Display(Name = "CEP")]
+        [ExRequired]
+        [RegularExpression(@"^\s*\d{8}$", ErrorMessage = "Somente números e com 8 dígitos. Ex: 78088000")]
+        public string Cep { get; set; }
+
         [Display(Name = "Endereço")]
         [ExRequired]
         public string Endereco { get; set; }
