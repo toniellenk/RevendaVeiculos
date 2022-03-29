@@ -42,9 +42,9 @@ namespace RevendaVeiculos.Web.Models
         [ExRequired]
         public int Quilometragem { get; set; }
 
-        [ExRequired]
-        [DataType(DataType.Currency)]
-        public decimal Valor { get; set; }
+        [Required(ErrorMessage = "Informe um valor válido")]
+        [RegularExpression(@"^\s*\d{1,6},\d{2}$", ErrorMessage = "Utilize o formato Ex: 0,00")]
+        public string? Valor { get; set; }
 
         [Display(Name = "Status")]
         public StatusVeiculoEnum StatusVeiculo { get; set; } = StatusVeiculoEnum.Disponivel;

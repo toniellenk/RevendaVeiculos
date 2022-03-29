@@ -25,6 +25,10 @@ namespace RevendaVeiculos.Data.BaseRepository
                                                   int page, int pageSize);
         Task<PagedQuery<T>> ListPagedAsync<TKey>(Expression<Func<T, TKey>> orderByExpression,
                                                     int page, int pageSize);
+
+        Task<PagedQuery<T>> ListIncludePagedAsync<TKey>(Expression<Func<T, TKey>> orderByExpression,
+            string[] includes, int page, int pageSize);
+
         Task<IEnumerable<T>> ListAsync();
         Task<IQueryable<T>> Where(Expression<Func<T, bool>> expression);
         Task<T> AddAsync(T entity);

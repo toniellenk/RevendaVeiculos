@@ -37,7 +37,7 @@ namespace RevendaVeiculos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var veiculos = await _veiculosService.ListPagedAsync(c => c.Id, 1, 10);
+            var veiculos = await _veiculosService.ListPagedAsync(1, 10);
             var veiculosVM = _mapper.Map<PagedQuery<VeiculoVM>>(veiculos);
             return View(veiculosVM);
         }
@@ -49,7 +49,7 @@ namespace RevendaVeiculos.Web.Controllers
                 return NotFound();
             }
 
-            var veiculo = await _veiculosService.FirstOrDefaultAsync(m => m.Id == id);
+            var veiculo = await _veiculosService.GetDetailsAsync(id);
             if (veiculo == null)
             {
                 return NotFound();
@@ -60,8 +60,7 @@ namespace RevendaVeiculos.Web.Controllers
 
         public async Task<IActionResult> Create()
         {
-            await PopularSelectLists();
-            return View(new VeiculoVM());
+            return await ViewWithSelectLists(new VeiculoVM());
         }
 
         [HttpPost]
@@ -70,13 +69,19 @@ namespace RevendaVeiculos.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (await _veiculosService.Any(r => r.Renavam == veiculoVM.Renavam))
+                {
+                    ModelState.AddModelError("Renavam", "Este RENAVAM já está vinculado à um veículo.");
+                    return await ViewWithSelectLists(veiculoVM);
+                }
+
                 await _veiculosService.AddAsync(_mapper.Map<Veiculo>(veiculoVM));
                 return RedirectToAction(nameof(Index));
             }
 
-            await PopularSelectLists();
-            return View(veiculoVM);
+            return await ViewWithSelectLists(veiculoVM);
         }
+
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -91,8 +96,7 @@ namespace RevendaVeiculos.Web.Controllers
                 return NotFound();
             }
 
-            await PopularSelectLists();
-            return View(_mapper.Map<VeiculoVM>(veiculo));
+            return await ViewWithSelectLists(_mapper.Map<VeiculoVM>(veiculo));
         }
 
         [HttpPost]
@@ -108,6 +112,12 @@ namespace RevendaVeiculos.Web.Controllers
             {
                 try
                 {
+                    if (await _veiculosService.Any(r => r.Id != id && r.Renavam == veiculoVM.Renavam))
+                    {
+                        ModelState.AddModelError("Renavam", "Este RENAVAM já está vinculado à um veículo.");
+                        return await ViewWithSelectLists(veiculoVM);
+                    }
+
                     await _veiculosService.UpdateAsync(_mapper.Map<Veiculo>(veiculoVM));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -123,6 +133,10 @@ namespace RevendaVeiculos.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            return await ViewWithSelectLists(veiculoVM);
+        }
+        private async Task<IActionResult> ViewWithSelectLists(VeiculoVM veiculoVM)
+        {
             await PopularSelectLists();
             return View(veiculoVM);
         }

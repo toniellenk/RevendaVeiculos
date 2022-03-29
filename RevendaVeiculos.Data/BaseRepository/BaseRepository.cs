@@ -41,7 +41,17 @@ namespace RevendaVeiculos.Data.BaseRepository
             var result = await Task.Run(() => _context.Set<T>().AsNoTracking()
                                                                .OrderBy(orderByExpression)
                                                                .ToPagedQuery(page, pageSize));
+            return result;
+        }
 
+        public async Task<PagedQuery<T>> ListIncludePagedAsync<TKey>(Expression<Func<T, TKey>> orderByExpression, string[] includes, int page, int pageSize)
+        {
+            var query = _context.Set<T>().AsNoTracking();
+
+            foreach (var include in includes)
+                query = query.Include(include);
+            
+            var result = await Task.Run(() => query.OrderBy(orderByExpression).ToPagedQuery(page, pageSize));
             return result;
         }
 

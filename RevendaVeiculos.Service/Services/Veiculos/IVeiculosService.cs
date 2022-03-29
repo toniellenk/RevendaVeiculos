@@ -10,5 +10,7 @@ namespace RevendaVeiculos.Service.Services.Veiculos
 {
     public interface IVeiculosService : IBaseRepository<Veiculo>
     {
+        Task<PagedQuery<Veiculo>> ListPagedAsync(int page, int pageSize);
+        Task<Veiculo?> GetDetailsAsync(int? id);
     }
 }
