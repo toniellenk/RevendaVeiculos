@@ -3,20 +3,19 @@ using RevendaVeiculos.Data;
 using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
 using RevendaVeiculos.Data.Enums;
+using RevendaVeiculos.Message.Producers;
 using RevendaVeiculos.Service.Base;
 using RevendaVeiculos.Service.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RevendaVeiculos.Service.Services.Veiculos
 {
     public class VeiculosService : BaseRepository<Veiculo>, IVeiculosService
     {
-        public VeiculosService(RevendaVeiculosContext context) : base(context)
+        protected readonly INotificacaoEmailProducer _notificacaoEmailProducer;
+
+        public VeiculosService(RevendaVeiculosContext context, INotificacaoEmailProducer notificacaoEmailProducer) : base(context)
         {
+            _notificacaoEmailProducer = notificacaoEmailProducer;
         }
 
         public async Task<PagedQuery<Veiculo>> ListPagedAsync(int page, int pageSize)
@@ -72,6 +71,13 @@ namespace RevendaVeiculos.Service.Services.Veiculos
             _context.Set<Veiculo>().Update(entityInput);
             await _context.SaveChangesAsync();
             serviceResult.Result = entityInput;
+
+            _notificacaoEmailProducer.PostNotificacao(new Message.Models.EmailInputModel()
+            {
+                Conteudo = "Seu veículo foi alterado",
+                OrigemId = 1,
+                DestinoId = 2
+            });
 
             return serviceResult;
         }

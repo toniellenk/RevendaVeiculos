@@ -1,8 +1,9 @@
 ﻿using LazZiya.ExpressLocalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RevendaVeiculos.Data;
+using RevendaVeiculos.Message.Models;
+using RevendaVeiculos.Message.Producers;
 using RevendaVeiculos.Service.Services.Marcas;
 using RevendaVeiculos.Service.Services.Proprietarios;
 using RevendaVeiculos.Service.Services.Veiculos;
@@ -59,18 +60,23 @@ namespace RevendaVeiculos.Web
                 services.AddControllersWithViews();
             }
 
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitConfig"));
+            services.AddScoped<INotificacaoEmailProducer, NotificacaoEmailProducer>();
+
             services.AddScoped<IMarcasService, MarcasService>();
             services.AddScoped<IProprietariosService, ProprietariosService>();
             services.AddScoped<IVeiculosService, VeiculosService>();
 
             services.AddAutoMapper(c => c.AddProfile<MapProfile>(), typeof(Startup));
             services.AddControllersWithViews();
+
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseRequestLocalization();
+            DatabaseManagementService.MigrationInitialisation(app);
 
+            app.UseRequestLocalization();
 
             if (!Environment.IsDevelopment())
             {

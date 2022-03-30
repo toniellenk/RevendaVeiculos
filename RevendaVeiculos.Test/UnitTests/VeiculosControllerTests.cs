@@ -7,6 +7,8 @@ using RevendaVeiculos.Data;
 using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
 using RevendaVeiculos.Data.Enums;
+using RevendaVeiculos.Message.Consumers;
+using RevendaVeiculos.Message.Producers;
 using RevendaVeiculos.Service.Services.Marcas;
 using RevendaVeiculos.Service.Services.Proprietarios;
 using RevendaVeiculos.Service.Services.Veiculos;
@@ -73,11 +75,12 @@ namespace RevendaVeiculos.Test.UnitTests
 
 
             var mockContext = new Mock<RevendaVeiculosContext>();
+            var mockNotificacaoProducer = new Mock<INotificacaoEmailProducer>();
             IList<Veiculo> entities = new List<Veiculo>() { new Veiculo() { Renavam = "4448516841845" }, new Veiculo() };
             mockContext.Setup(x => x.Set<Veiculo>()).ReturnsDbSet(entities);
 
 
-            var mockService = new VeiculosService(mockContext.Object);
+            var mockService = new VeiculosService(mockContext.Object, mockNotificacaoProducer.Object);
             var controller = ConfigController(mockService);
 
             await controller.Create(veiculoFake);
@@ -114,10 +117,12 @@ namespace RevendaVeiculos.Test.UnitTests
 
 
             var mockContext = new Mock<RevendaVeiculosContext>();
+            var mockNotificacaoProducer = new Mock<INotificacaoEmailProducer>();
+
             mockContext.Setup(x => x.Set<Veiculo>()).ReturnsDbSet(veiculosEntitiesFake);
 
 
-            var mockService = new VeiculosService(mockContext.Object);
+            var mockService = new VeiculosService(mockContext.Object, mockNotificacaoProducer.Object);
             var controller = ConfigController(mockService);
 
             await controller.Edit(4512, veiculoFake);
