@@ -45,38 +45,34 @@ namespace RevendaVeiculos.Message.Consumers
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            var consumer = new EventingBasicConsumer(_channel);
+
+            consumer.Received += (sender, eventArgs) =>
             {
-                var consumer = new EventingBasicConsumer(_channel);
+                _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Recebeu uma mensagem");
 
-                consumer.Received += (sender, eventArgs) =>
+                var contentArray = eventArgs.Body.ToArray();
+                var contentString = Encoding.UTF8.GetString(contentArray);
+                var message = JsonConvert.DeserializeObject<EmailInputModel>(contentString);
+
+                _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Desserializou a mensagem");
+
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Recebeu uma mensagem");
+                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Iniciou o disparo do e-mail");
 
-                    var contentArray = eventArgs.Body.ToArray();
-                    var contentString = Encoding.UTF8.GetString(contentArray);
-                    var message = JsonConvert.DeserializeObject<EmailInputModel>(contentString);
+                    var notificationService = scope.ServiceProvider.GetRequiredService<INotificacaoService>();
+                    var result = notificationService.Notificar(message.OrigemId, message.DestinoId, message.Conteudo) ? "Sucesso" : "Falha";
 
-                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Desserializou a mensagem");
+                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Finalizou o disparo ro e-mail com {result}");
+                }
 
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Iniciou o disparo do e-mail");
+                _channel.BasicAck(eventArgs.DeliveryTag, false);
 
-                        var notificationService = scope.ServiceProvider.GetRequiredService<INotificacaoService>();
-                        var result = notificationService.Notificar(message.OrigemId, message.DestinoId, message.Conteudo) ? "Sucesso" : "Falha";
+                _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Removeu mensagem da fila");
+            };
 
-                        _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Finalizou o disparo ro e-mail com {result}");
-                    }
-
-                    _channel.BasicAck(eventArgs.DeliveryTag, false);
-
-                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Removeu mensagem da fila");
-                };
-
-                _channel.BasicConsume(_configuration.Queue, false, consumer);
-
-            }
+            _channel.BasicConsume(_configuration.Queue, false, consumer);
 
             return Task.CompletedTask;
         }
