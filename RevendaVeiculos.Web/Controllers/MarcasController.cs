@@ -12,14 +12,12 @@ namespace RevendaVeiculos.Web.Controllers
 {
     public class MarcasController : Controller
     {
-        private readonly RevendaVeiculosContext _context;
         private readonly IMarcasService _marcasService;
         private readonly IMapper _mapper;  
 
 
-        public MarcasController(RevendaVeiculosContext context, IMarcasService marcasService, IMapper mapper)
+        public MarcasController(IMarcasService marcasService, IMapper mapper)
         {
-            _context = context;
             _marcasService = marcasService;
             _mapper = mapper;
         }

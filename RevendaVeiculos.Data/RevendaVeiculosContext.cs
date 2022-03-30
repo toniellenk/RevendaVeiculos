@@ -10,13 +10,16 @@ namespace RevendaVeiculos.Data
 {
     public class RevendaVeiculosContext : DbContext
     {
+        public RevendaVeiculosContext()
+        {
+        }
         public RevendaVeiculosContext (DbContextOptions<RevendaVeiculosContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Marca> Marca { get; set; }
-        public DbSet<Proprietario> Proprietario { get; set; }
-        public DbSet<Veiculo> Veiculo { get; set; }
+        public virtual DbSet<Marca> Marca { get; set; }
+        public virtual DbSet<Proprietario> Proprietario { get; set; }
+        public virtual DbSet<Veiculo> Veiculo { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
+using RevendaVeiculos.Service.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace RevendaVeiculos.Service.Services.Veiculos
     {
         Task<PagedQuery<Veiculo>> ListPagedAsync(int page, int pageSize);
         Task<Veiculo?> GetDetailsAsync(int? id);
+        new Task<ServiceResult<Veiculo>> AddAsync(Veiculo entity);
+        new Task<ServiceResult<Veiculo>> UpdateAsync(Veiculo entity);
     }
 }

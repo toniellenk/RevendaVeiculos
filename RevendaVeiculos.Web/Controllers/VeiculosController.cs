@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using RevendaVeiculos.Data;
 using RevendaVeiculos.Data.BaseRepository;
 using RevendaVeiculos.Data.Entities;
+using RevendaVeiculos.Data.Enums;
 using RevendaVeiculos.Service.Services.Marcas;
 using RevendaVeiculos.Service.Services.Proprietarios;
 using RevendaVeiculos.Service.Services.Veiculos;
@@ -15,20 +16,18 @@ namespace RevendaVeiculos.Web.Controllers
 {
     public class VeiculosController : Controller
     {
-        private readonly RevendaVeiculosContext _context;
-        private readonly IMapper _mapper;  
+        private readonly IMapper _mapper;
         private readonly IVeiculosService _veiculosService;
         private readonly IProprietariosService _proprietariosService;
         private readonly IMarcasService _marcasService;
 
 
-        public VeiculosController(RevendaVeiculosContext context, 
+        public VeiculosController(
             IMapper mapper,
-            IVeiculosService veiculosService, 
+            IVeiculosService veiculosService,
             IProprietariosService proprietariosService,
             IMarcasService marcasService)
         {
-            _context = context;
             _mapper = mapper;
             _veiculosService = veiculosService;
             _proprietariosService = proprietariosService;
@@ -69,13 +68,16 @@ namespace RevendaVeiculos.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _veiculosService.Any(r => r.Renavam == veiculoVM.Renavam))
+                var result = await _veiculosService.AddAsync(_mapper.Map<Veiculo>(veiculoVM));
+
+                if (result.PossueErro)
                 {
-                    ModelState.AddModelError("Renavam", "Este RENAVAM já está vinculado à um veículo.");
+                    foreach (var item in result.Erros)
+                        ModelState.AddModelError(item.Key, item.Value);
+
                     return await ViewWithSelectLists(veiculoVM);
                 }
 
-                await _veiculosService.AddAsync(_mapper.Map<Veiculo>(veiculoVM));
                 return RedirectToAction(nameof(Index));
             }
 
@@ -112,13 +114,15 @@ namespace RevendaVeiculos.Web.Controllers
             {
                 try
                 {
-                    if (await _veiculosService.Any(r => r.Id != id && r.Renavam == veiculoVM.Renavam))
+                    var result = await _veiculosService.UpdateAsync(_mapper.Map<Veiculo>(veiculoVM));
+
+                    if (result.PossueErro)
                     {
-                        ModelState.AddModelError("Renavam", "Este RENAVAM já está vinculado à um veículo.");
+                        foreach (var item in result.Erros)
+                            ModelState.AddModelError(item.Key, item.Value);
+
                         return await ViewWithSelectLists(veiculoVM);
                     }
-
-                    await _veiculosService.UpdateAsync(_mapper.Map<Veiculo>(veiculoVM));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
