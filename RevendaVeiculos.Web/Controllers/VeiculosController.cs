@@ -84,7 +84,6 @@ namespace RevendaVeiculos.Web.Controllers
             return await ViewWithSelectLists(veiculoVM);
         }
 
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
