@@ -1,4 +1,4 @@
-# Revenda de Veiculos
+# Revenda de Veículos
 Sistema para revenda de veículos, com cadastro de Marcas, Proprierários e Veículos.
 
 # Techs
