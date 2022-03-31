@@ -9,4 +9,6 @@ Sistema para revenda de veículos, com cadastro de Marcas, Proprierários e Veí
 * AutoMapper 11.0
 * RabbitMQ 3
 * SendGrid
-* Docker-compose 3.4
+* docker-compose 3.4
+* xUnit 2.4
+* Moq 4.17
