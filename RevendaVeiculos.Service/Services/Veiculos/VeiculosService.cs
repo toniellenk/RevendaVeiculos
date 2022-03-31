@@ -50,6 +50,15 @@ namespace RevendaVeiculos.Service.Services.Veiculos
             await _context.SaveChangesAsync();
             serviceResult.Result = entityInput;
 
+            var proprietario = await _context.Set<Proprietario>().FirstOrDefaultAsync(p => p.Id == entityInput.ProprietarioId);
+
+            _notificacaoEmailProducer.PostNotificacao(new Message.Models.EmailInputModel()
+            {
+                Conteudo = "Atenção - Um veículo foi atribuído à você como proprietário.",
+                EmailDestino = proprietario!.Email,
+                NomeDestino = proprietario!.Nome
+            });
+
             return serviceResult;
         }
 
@@ -72,11 +81,13 @@ namespace RevendaVeiculos.Service.Services.Veiculos
             await _context.SaveChangesAsync();
             serviceResult.Result = entityInput;
 
+            var proprietario = await _context.Set<Proprietario>().FirstOrDefaultAsync(p => p.Id == entityInput.ProprietarioId);
+
             _notificacaoEmailProducer.PostNotificacao(new Message.Models.EmailInputModel()
             {
-                Conteudo = "Seu veículo foi alterado",
-                OrigemId = 1,
-                DestinoId = 2
+                Conteudo = "Atenção - Um veículo de sua propriedade foi alterado.",
+                EmailDestino = proprietario!.Email,
+                NomeDestino = proprietario!.Nome
             });
 
             return serviceResult;

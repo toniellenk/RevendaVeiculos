@@ -1,6 +1,7 @@
 using RevendaVeiculos.Message.Consumers;
 using RevendaVeiculos.Message.Models;
-using RevendaVeiculos.Message.Services;
+using RevendaVeiculos.SendGrid.DependencyInjection;
+
 
 IHost host = Host.CreateDefaultBuilder(args)
              .ConfigureServices((hostContext, services) =>
@@ -9,7 +10,12 @@ IHost host = Host.CreateDefaultBuilder(args)
 
                  services.Configure<RabbitMqConfiguration>(configuration.GetSection("RabbitConfig"));
 
-                 services.AddScoped<INotificacaoService, NotificacaoService>();
+                 services.AddSendGridEmailService(configuration["SendGrid:ApiKey"],
+                     options =>
+                     {
+                         options.FromEmail = configuration["Email:FromEmail"];
+                         options.FromName = configuration["Email:FromName"];
+                     });
 
                  services.AddHostedService<NotificacaoEmailConsumer>();
              })

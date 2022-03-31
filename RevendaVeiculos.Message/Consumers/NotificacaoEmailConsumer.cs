@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RevendaVeiculos.Message.Models;
-using RevendaVeiculos.Message.Services;
+using RevendaVeiculos.SendGrid.Abstractions;
 using System.Text;
 
 namespace RevendaVeiculos.Message.Consumers
@@ -15,10 +15,15 @@ namespace RevendaVeiculos.Message.Consumers
         private readonly IModel _channel;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<NotificacaoEmailConsumer> _logger;
+        private readonly IEmailService _emailService;
 
 
-        public NotificacaoEmailConsumer(ILogger<NotificacaoEmailConsumer> logger, IOptions<RabbitMqConfiguration> option, IServiceProvider serviceProvider)
+        public NotificacaoEmailConsumer(ILogger<NotificacaoEmailConsumer> logger,
+            IOptions<RabbitMqConfiguration> option,
+            IServiceProvider serviceProvider,
+            IEmailService emailService)
         {
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _logger = logger;
 
             _configuration = option.Value;
@@ -47,7 +52,7 @@ namespace RevendaVeiculos.Message.Consumers
         {
             var consumer = new EventingBasicConsumer(_channel);
 
-            consumer.Received += (sender, eventArgs) =>
+            consumer.Received += async (sender, eventArgs) =>
             {
                 _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Recebeu uma mensagem");
 
@@ -57,14 +62,17 @@ namespace RevendaVeiculos.Message.Consumers
 
                 _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Desserializou a mensagem");
 
-                using (var scope = _serviceProvider.CreateScope())
+
+                try
                 {
-                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Iniciou o disparo do e-mail");
+                    await _emailService.SendAsync(message.EmailDestino, message.NomeDestino, "Notificação - Venda Veículo", message.Conteudo, $"<b>{message.Conteudo}<b>", stoppingToken);
+                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Finalizou o disparo ro e-mail com Sucesso");
 
-                    var notificationService = scope.ServiceProvider.GetRequiredService<INotificacaoService>();
-                    var result = notificationService.Notificar(message.OrigemId, message.DestinoId, message.Conteudo) ? "Sucesso" : "Falha";
-
-                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Finalizou o disparo ro e-mail com {result}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - Finalizou o disparo ro e-mail com Erro");
+                    _logger.LogInformation($"{DateTime.UtcNow.ToLongTimeString()} - {ex.Message}");
                 }
 
                 _channel.BasicAck(eventArgs.DeliveryTag, false);

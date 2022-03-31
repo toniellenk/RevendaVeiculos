@@ -2,8 +2,8 @@
 {
     public class EmailInputModel
     {
-        public int OrigemId { get; set; }
-        public int DestinoId { get; set; }
+        public string EmailDestino { get; set; }
+        public string NomeDestino { get; set; }
         public string Conteudo { get; set; }
         public DateTime DataCriacao { get; set; } = DateTime.Now;
     }
