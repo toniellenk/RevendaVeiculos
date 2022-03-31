@@ -7,6 +7,7 @@
     <UserSecretsId>92fc8c00-4601-4764-ba4e-b5657dfce73e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
