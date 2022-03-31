@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RevendaVeiculos.Message", "
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{59943902-27E6-4FC1-ACE1-BCC28C001644}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevendaVeiculos.SendGrid", "..\RevendaVeiculos.SendGrid\RevendaVeiculos.SendGrid.csproj", "{FD8F90FE-AACB-42A5-9702-02CE1DB89AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RevendaVeiculos.SendGrid", "RevendaVeiculos.SendGrid\RevendaVeiculos.SendGrid.csproj", "{E420E803-3406-45EA-B308-44DB9C66FA2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{59943902-27E6-4FC1-ACE1-BCC28C001644}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59943902-27E6-4FC1-ACE1-BCC28C001644}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59943902-27E6-4FC1-ACE1-BCC28C001644}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD8F90FE-AACB-42A5-9702-02CE1DB89AA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD8F90FE-AACB-42A5-9702-02CE1DB89AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD8F90FE-AACB-42A5-9702-02CE1DB89AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD8F90FE-AACB-42A5-9702-02CE1DB89AA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E420E803-3406-45EA-B308-44DB9C66FA2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E420E803-3406-45EA-B308-44DB9C66FA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E420E803-3406-45EA-B308-44DB9C66FA2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E420E803-3406-45EA-B308-44DB9C66FA2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

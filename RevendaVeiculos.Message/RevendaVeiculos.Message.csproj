@@ -19,5 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\RevendaVeiculos.SendGrid\RevendaVeiculos.SendGrid.csproj" />
+    <ProjectReference Include="..\RevendaVeiculos.SendGrid\RevendaVeiculos.SendGrid.csproj" />
   </ItemGroup>
 </Project>
